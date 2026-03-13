@@ -1,4 +1,4 @@
-# Five Guys PHP Rewrite (Template-First Structure)
+# YUMYUMAPP FIRST DRAFT
 
 ## Run locally
 
