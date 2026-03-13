@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{page_title}}</title>
+  <link rel="stylesheet" href="{{base_css}}">
+  <link rel="stylesheet" href="{{page_css}}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container inner">
+      <a class="brand" href="/script/index.php?page=home">Five Guys Kitchen Planner</a>
+      <nav class="nav-links">{{nav_links}}</nav>
+    </div>
+  </header>
+  {{flash_message}}
+  <main class="page-shell">
+    <section class="container grid-2">
+      <article class="recipe-hero">
+        <img src="{{recipe_image}}" alt="{{recipe_title}}">
+      </article>
+      <article class="card">
+        <h1>{{recipe_title}}</h1>
+        <p>{{recipe_summary}}</p>
+        <div class="recipe-meta"><span>{{recipe_ready}} min</span><span>{{recipe_servings}} servings</span></div>
+        <h2>Ingredients</h2>
+        <ul class="ingredients-list">{{recipe_ingredients}}</ul>
+        <h2>Steps</h2>
+        <ol class="steps-list">{{recipe_steps}}</ol>
+      </article>
+    </section>
+  </main>
+  <footer class="site-footer">Built with PHP + HTML templates + vanilla JS + SQLite.</footer>
+</body>
+</html>

@@ -1,0 +1,3 @@
+.calendar-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.day-card { background: white; border-radius: 18px; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+@media (max-width: 780px) { .calendar-grid { grid-template-columns: 1fr; } }

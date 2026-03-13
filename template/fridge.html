@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{page_title}}</title>
+  <link rel="stylesheet" href="{{base_css}}">
+  <link rel="stylesheet" href="{{page_css}}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container inner">
+      <a class="brand" href="/script/index.php?page=home">Yum Yum App</a>
+      <nav class="nav-links">{{nav_links}}</nav>
+    </div>
+  </header>
+  {{flash_message}}
+  <main class="page-shell">
+    <section class="container fridge-layout">
+      <article class="card">
+        <h1>Add ingredient</h1>
+        <form id="fridge-form" class="form-stack">
+          <label>Ingredient name
+            <input class="input" type="text" name="item_name" required>
+          </label>
+          <label>Quantity
+            <input class="input" type="text" name="quantity" placeholder="e.g. 2 slices, 500g, 1 bag">
+          </label>
+          <button type="submit">Add to fridge</button>
+          <p id="fridge-message"></p>
+        </form>
+      </article>
+      <article class="card">
+        <h2>Your fridge</h2>
+        <ul id="fridge-list"></ul>
+      </article>
+    </section>
+  </main>
+  <script defer src="{{page_js}}"></script>
+</body>
+</html>

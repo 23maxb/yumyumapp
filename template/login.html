@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{page_title}}</title>
+  <link rel="stylesheet" href="{{base_css}}">
+  <link rel="stylesheet" href="{{page_css}}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container inner">
+      <a class="brand" href="/script/index.php?page=home">Yum Yum App</a>
+      <nav class="nav-links">{{nav_links}}</nav>
+    </div>
+  </header>
+  {{flash_message}}
+  <main class="page-shell auth-wrap">
+    <section class="card auth-card">
+      <h1>Welcome back</h1>
+      <p>Log in to manage your fridge, recipe matches, and weekly meal plan.</p>
+      <form id="login-form" class="form-stack">
+        <label>Email
+          <input class="input" type="email" name="email" value="demo@fiveguys.local" required>
+        </label>
+        <label>Password
+          <input class="input" type="password" name="password" value="password123" required>
+        </label>
+        <button type="submit">Login</button>
+        <p class="form-message" data-message></p>
+      </form>
+    </section>
+  </main>
+  <footer class="site-footer">Built with PHP + HTML templates + vanilla JS + SQLite.</footer>
+  <script defer src="{{page_js}}"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+.auth-wrap { min-height: calc(100vh - 180px); display: grid; place-items: center; }
+.auth-card { width: min(460px, 100%); }
+.auth-card h1 { margin-top: 0; }
+.form-stack { display: grid; gap: 1rem; }
+.form-stack label { display: grid; gap: 0.45rem; font-weight: 700; }
+.form-message { min-height: 1.2rem; color: #8d0801; }

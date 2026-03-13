@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{page_title}}</title>
+  <link rel="stylesheet" href="{{base_css}}">
+  <link rel="stylesheet" href="{{page_css}}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container inner">
+      <a class="brand" href="/script/index.php?page=home">Yum Yum App</a>
+      <nav class="nav-links">{{nav_links}}</nav>
+    </div>
+  </header>
+  {{flash_message}}
+  <main class="page-shell">
+    <div class="container">
+      <section class="hero">
+        <p>Signed in as {{user_name}}</p>
+        <h1>Cook smarter with what you already have.</h1>
+        <p>Keep your fridge organized, discover matching recipes, and plan a full week of meals.</p>
+        <div class="hero-actions">
+          <a class="button" href="/script/index.php?page=fridge">Open Fridge</a>
+          <a class="button secondary" href="/script/index.php?page=recipes">Browse Recipes</a>
+        </div>
+        <div class="stats-grid">{{stats_cards}}</div>
+      </section>
+      <section class="grid-2 panel-grid">
+        <article class="panel">
+          <!-- <h2>Template-first structure</h2>
+          <ul>
+            <li>The full HTML for each page lives in the <strong>template</strong> folder.</li>
+            <li>PHP in <strong>script</strong> loads templates, reads the database, and handles sessions.</li>
+            <li>JavaScript only adds interactivity like search, form submission, and calendar updates.</li>
+          </ul> -->
+        </article>
+        <article class="panel">
+          <h2>Live status</h2>
+          <p>Current local time: <strong data-now></strong></p>
+        </article>
+      </section>
+    </div>
+  </main>
+  <script defer src="{{page_js}}"></script>
+</body>
+</html>

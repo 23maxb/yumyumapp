@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{page_title}}</title>
+  <link rel="stylesheet" href="{{base_css}}">
+  <link rel="stylesheet" href="{{page_css}}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container inner">
+      <a class="brand" href="/script/index.php?page=home">Yum Yum App</a>
+      <nav class="nav-links">{{nav_links}}</nav>
+    </div>
+  </header>
+  {{flash_message}}
+  <main class="page-shell">
+    <section class="container">
+      <h1>Weekly meal planner</h1>
+      <p>Select a recipe for each day. The HTML stays here, and JS only updates the selects.</p>
+      <div id="calendar-grid" class="calendar-grid"></div>
+    </section>
+  </main>
+  <script defer src="{{page_js}}"></script>
+</body>
+</html>
