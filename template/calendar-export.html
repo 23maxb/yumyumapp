@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{page_title}}</title>
+  <link rel="stylesheet" href="{{base_css}}">
+  <link rel="stylesheet" href="{{page_css}}">
+</head>
+<body class="export-body">
+  <main class="container export-shell">
+    <section class="export-toolbar no-print">
+      <div>
+        <h1>Weekly Meal Plan PDF</h1>
+        <p>Review the plan, then use Save as PDF from the print dialog.</p>
+      </div>
+      <button id="print-plan" type="button">Save as PDF</button>
+    </section>
+
+    <section class="export-summary">
+      <div>
+        <p class="export-eyebrow">Planner</p>
+        <h2>{{export_user_name}}</h2>
+      </div>
+      <div>
+        <p class="export-eyebrow">Generated</p>
+        <p>{{generated_at}}</p>
+      </div>
+    </section>
+
+    <section class="export-ingredients card">
+      <h2>Combined Ingredient List</h2>
+      <ul class="shopping-list">{{export_ingredients}}</ul>
+    </section>
+
+    <section class="export-days-grid">
+      {{export_days}}
+    </section>
+  </main>
+  <script defer src="{{page_js}}"></script>
+</body>
+</html>

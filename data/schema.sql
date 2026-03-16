@@ -15,7 +15,9 @@ CREATE TABLE IF NOT EXISTS recipes (
     servings INTEGER DEFAULT 2,
     ingredients_json TEXT NOT NULL,
     instructions TEXT NOT NULL,
-    category TEXT DEFAULT 'Burger'
+    category TEXT DEFAULT 'Burger',
+    created_by_user_id INTEGER,
+    FOREIGN KEY(created_by_user_id) REFERENCES users(id)
 );
 
 CREATE TABLE IF NOT EXISTS fridge_items (
@@ -31,9 +33,10 @@ CREATE TABLE IF NOT EXISTS meal_plan (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     day_name TEXT NOT NULL,
+    meal_type TEXT NOT NULL DEFAULT 'dinner',
     recipe_id INTEGER,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(user_id, day_name),
+    UNIQUE(user_id, day_name, meal_type),
     FOREIGN KEY(user_id) REFERENCES users(id),
     FOREIGN KEY(recipe_id) REFERENCES recipes(id)
 );

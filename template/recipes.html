@@ -16,13 +16,50 @@
   </header>
   {{flash_message}}
   <main class="page-shell">
-    <section class="container">
-      <h1>Recipe matches</h1>
-      <p>Recipes are loaded by PHP-backed API data, while this HTML stays in the template folder.</p>
-      <div class="recipes-toolbar">
-        <input id="recipe-search" class="input" type="search" placeholder="Search recipes...">
-      </div>
-      <div id="recipe-grid" class="recipe-grid"></div>
+    <section class="container recipes-page-layout">
+      <aside class="panel recipe-form-panel">
+        <h1>Add a recipe</h1>
+        <p>Save your own recipe so it shows up alongside the built-in matches.</p>
+        <form id="recipe-create-form" class="recipe-form">
+          <label>Recipe title
+            <input class="input" type="text" name="title" required>
+          </label>
+          <label>Short summary
+            <textarea class="input" name="summary" rows="3" required></textarea>
+          </label>
+          <div class="grid-2 compact-grid">
+            <label>Ready in (minutes)
+              <input class="input" type="number" name="ready_minutes" min="1" value="20" required>
+            </label>
+            <label>Servings
+              <input class="input" type="number" name="servings" min="1" value="2" required>
+            </label>
+          </div>
+          <label>Category
+            <input class="input" type="text" name="category" placeholder="Burger, Sandwich, Sides...">
+          </label>
+          <label>Image URL
+            <input class="input" type="url" name="image_url" placeholder="Optional image link">
+          </label>
+          <label>Ingredients
+            <textarea class="input" name="ingredients" rows="5" placeholder="One per line or separated by commas" required></textarea>
+          </label>
+          <label>Instructions
+            <textarea class="input" name="instructions" rows="6" placeholder="Write each step on a new line" required></textarea>
+          </label>
+          <button type="submit">Add recipe</button>
+          <p id="recipe-form-message" class="form-message"></p>
+        </form>
+      </aside>
+
+      <section class="panel recipes-browser-panel">
+        <h2>Recipe library</h2>
+        <p>Browse seeded recipes and anything added by users.</p>
+        <div class="recipes-toolbar">
+          <input id="recipe-search" class="input" type="search" placeholder="Search recipes...">
+        </div>
+        <div id="recipe-grid" class="recipe-grid"></div>
+      </section>
     </section>
   </main>
   <script defer src="{{page_js}}"></script>

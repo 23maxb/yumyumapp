@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/lib.php';
 
 $page = $_GET['page'] ?? (current_user() ? 'home' : 'login');
-$allowed = ['home', 'recipes', 'recipe', 'fridge', 'calendar', 'login', 'register'];
+$allowed = ['home', 'recipes', 'recipe', 'fridge', 'calendar', 'calendar-export', 'login', 'register'];
 if (!in_array($page, $allowed, true)) {
     http_response_code(404);
     echo 'Page not found.';

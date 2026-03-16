@@ -24,13 +24,20 @@
         <h1>{{recipe_title}}</h1>
         <p>{{recipe_summary}}</p>
         <div class="recipe-meta"><span>{{recipe_ready}} min</span><span>{{recipe_servings}} servings</span></div>
-        <h2>Ingredients</h2>
-        <ul class="ingredients-list">{{recipe_ingredients}}</ul>
+        <section class="ingredient-status-grid">
+          <div class="ingredient-panel matched-panel">
+            <h2>Ingredients You Have</h2>
+            <ul class="ingredients-list">{{recipe_matched_ingredients}}</ul>
+          </div>
+          <div class="ingredient-panel missing-panel">
+            <h2>Ingredients You Need</h2>
+            <ul class="ingredients-list">{{recipe_missing_ingredients}}</ul>
+          </div>
+        </section>
         <h2>Steps</h2>
         <ol class="steps-list">{{recipe_steps}}</ol>
       </article>
     </section>
   </main>
-  <footer class="site-footer">Built with PHP + HTML templates + vanilla JS + SQLite.</footer>
 </body>
 </html>

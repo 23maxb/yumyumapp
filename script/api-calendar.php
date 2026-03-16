@@ -12,14 +12,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true) ?: [];
     $day = trim((string)($input['day_name'] ?? ''));
+    $mealType = strtolower(trim((string)($input['meal_type'] ?? '')));
     $recipeId = (int)($input['recipe_id'] ?? 0);
     if ($day === '') {
         http_response_code(422);
         echo json_encode(['success' => false, 'message' => 'Day is required']);
         exit;
     }
-    $stmt = db()->prepare('INSERT INTO meal_plan (user_id, day_name, recipe_id) VALUES (?, ?, ?) ON CONFLICT(user_id, day_name) DO UPDATE SET recipe_id = excluded.recipe_id');
-    $stmt->execute([$userId, $day, $recipeId ?: null]);
+    if (!in_array($mealType, MEAL_TYPES, true)) {
+        http_response_code(422);
+        echo json_encode(['success' => false, 'message' => 'Meal type is required']);
+        exit;
+    }
+    $stmt = db()->prepare('INSERT INTO meal_plan (user_id, day_name, meal_type, recipe_id) VALUES (?, ?, ?, ?) ON CONFLICT(user_id, day_name, meal_type) DO UPDATE SET recipe_id = excluded.recipe_id');
+    $stmt->execute([$userId, $day, $mealType, $recipeId ?: null]);
     echo json_encode(['success' => true]);
     exit;
 }

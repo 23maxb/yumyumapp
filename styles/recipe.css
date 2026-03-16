@@ -1,3 +1,12 @@
 .recipe-hero img { width: 100%; height: 360px; object-fit: cover; border-radius: 22px; }
 .recipe-meta { display: flex; gap: 1rem; color: #666; }
 .steps-list, .ingredients-list { padding-left: 1.2rem; }
+.ingredient-status-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.25rem 0; }
+.ingredient-panel { border-radius: 18px; padding: 1rem; }
+.ingredient-panel h2 { margin-top: 0; font-size: 1.1rem; }
+.matched-panel { background: #e9f7ee; }
+.missing-panel { background: #fff1e6; }
+
+@media (max-width: 780px) {
+	.ingredient-status-grid { grid-template-columns: 1fr; }
+}

@@ -1,11 +1,12 @@
 <?php
-// Returns recipe data
 declare(strict_types=1);
+
 require_once __DIR__ . '/lib.php';
 require_login();
+
 header('Content-Type: application/json');
-$recipes = matched_recipes_for_user((int)current_user()['id']);
-$data = array_map(function(array $recipe): array {
+
+function recipe_api_payload(array $recipe): array {
     return [
         'id' => (int)$recipe['id'],
         'title' => $recipe['title'],
@@ -14,6 +15,49 @@ $data = array_map(function(array $recipe): array {
         'ready_minutes' => (int)$recipe['ready_minutes'],
         'servings' => (int)$recipe['servings'],
         'match_count' => (int)($recipe['match_count'] ?? 0),
+        'category' => $recipe['category'] ?? 'Custom',
+        'created_by_user_id' => isset($recipe['created_by_user_id']) ? (int)$recipe['created_by_user_id'] : null,
     ];
-}, $recipes);
-echo json_encode(['success' => true, 'recipes' => $data]);
+}
+
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+if ($method === 'POST') {
+    $payload = json_decode(file_get_contents('php://input') ?: '', true);
+    if (!is_array($payload)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Invalid recipe payload.']);
+        exit;
+    }
+
+    try {
+        $recipe = create_recipe($payload, (int)current_user()['id']);
+        echo json_encode([
+            'success' => true,
+            'message' => 'Recipe added successfully.',
+            'recipe' => recipe_api_payload($recipe),
+        ]);
+    } catch (InvalidArgumentException $exception) {
+        http_response_code(422);
+        echo json_encode(['success' => false, 'message' => $exception->getMessage()]);
+    } catch (Throwable $exception) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Recipe could not be saved.']);
+    }
+    exit;
+}
+
+$mode = $_GET['mode'] ?? 'matched';
+
+if ($mode === 'all') {
+    $recipes = recipes_all();
+} else {
+    $recipes = matched_recipes_for_user((int)current_user()['id']);
+}
+
+$data = array_map('recipe_api_payload', $recipes);
+
+echo json_encode([
+    'success' => true,
+    'recipes' => $data
+]);

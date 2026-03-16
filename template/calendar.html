@@ -17,8 +17,14 @@
   {{flash_message}}
   <main class="page-shell">
     <section class="container">
-      <h1>Weekly meal planner</h1>
-      <p>Select a recipe for each day. The HTML stays here, and JS only updates the selects.</p>
+      <div class="calendar-header">
+        <div>
+          <h1>Weekly meal planner</h1>
+          <p>Plan breakfast, lunch, and dinner for each day of the week.</p>
+        </div>
+        <a class="button" href="/script/index.php?page=calendar-export" target="_blank" rel="noopener">Export PDF</a>
+      </div>
+      <p id="calendar-status" class="calendar-status" aria-live="polite"></p>
       <div id="calendar-grid" class="calendar-grid"></div>
     </section>
   </main>
