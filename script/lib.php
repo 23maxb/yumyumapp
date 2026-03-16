@@ -294,6 +294,23 @@ function recipes_all(): array {
     return $rows;
 }
 
+function recipes_all_with_matches(int $userId): array {
+    $items = fridge_items_for_user($userId);
+    $names = array_map(fn($row) => strtolower(trim((string)$row['item_name'])), $items);
+
+    $recipes = recipes_all();
+    foreach ($recipes as &$recipe) {
+        $count = 0;
+        foreach ($recipe['ingredients'] as $ingredient) {
+            if (in_array(strtolower(trim((string)$ingredient)), $names, true)) {
+                $count++;
+            }
+        }
+        $recipe['match_count'] = $count;
+    }
+    return $recipes;
+}
+
 function recipe_find(int $id): ?array {
     $stmt = db()->prepare('SELECT * FROM recipes WHERE id = ?');
     $stmt->execute([$id]);
@@ -392,7 +409,7 @@ function meal_plan_for_user(int $userId): array {
     foreach ($rows as $row) {
         $dayName = (string)$row['day_name'];
         $mealType = (string)$row['meal_type'];
-        if (!isset($map[$dayName][$mealType])) {
+        if (!array_key_exists($dayName, $map) || !array_key_exists($mealType, $map[$dayName])) {
             continue;
         }
         $map[$dayName][$mealType] = [

@@ -50,7 +50,7 @@ if ($method === 'POST') {
 $mode = $_GET['mode'] ?? 'matched';
 
 if ($mode === 'all') {
-    $recipes = recipes_all();
+    $recipes = recipes_all_with_matches((int)current_user()['id']);
 } else {
     $recipes = matched_recipes_for_user((int)current_user()['id']);
 }
