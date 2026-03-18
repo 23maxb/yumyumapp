@@ -32,14 +32,15 @@ document.addEventListener('DOMContentLoaded', async () => {
           <img src="${recipe.image_url}" alt="${recipe.title}">
           <div class="recipe-card-body">
             <div class="recipe-meta">
-              <span>${recipe.ready_minutes} min</span>
-              <span>${recipe.servings} serving(s)</span>
               <span>${recipe.category || 'Custom'}</span>
               <span>${recipe.match_count} ingredient match(es)</span>
             </div>
             <h3>${recipe.title}</h3>
             <p>${recipe.summary}</p>
-            <a class="button-link" href="/script/index.php?page=recipe&id=${recipe.id}">Open recipe</a>
+            ${recipe.is_external 
+              ? `<a class="button-link" href="${recipe.external_url}" target="_blank">View on Spoonacular</a>`
+              : `<a class="button-link" href="/script/index.php?page=recipe&id=${recipe.id}">Open recipe</a>`
+            }
           </div>
         </article>
       `).join('') || '<p class="empty-state">No recipes matched your search.</p>';
