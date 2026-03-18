@@ -13,8 +13,8 @@ Then open:
 
 ## Demo login
 
-- Email: demo@fiveguys.local
-- Password: password123
+- Email: demo@gmail.com
+- Password: 123456
 
 ## Structure
 

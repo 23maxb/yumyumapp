@@ -1,23 +1,155 @@
-.export-body { background: #f4f1e8; }
-.export-shell { padding: 2rem 0 3rem; }
-.export-toolbar { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
-.export-toolbar h1 { margin: 0 0 0.35rem; }
-.export-summary { display: flex; justify-content: space-between; gap: 1rem; background: white; border-radius: 22px; padding: 1.25rem; box-shadow: 0 10px 30px rgba(0,0,0,0.06); margin-bottom: 1.25rem; }
-.export-eyebrow { margin: 0 0 0.35rem; color: #5f6b62; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-.export-summary h2, .export-summary p { margin: 0; }
-.export-ingredients { margin-bottom: 1.25rem; }
-.shopping-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem 1rem; }
-.shopping-list li { display: flex; justify-content: space-between; gap: 1rem; padding-bottom: 0.55rem; border-bottom: 1px solid #ececec; }
-.shopping-list span { color: #666; }
-.export-days-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-.export-day-card { background: white; border-radius: 22px; padding: 1.25rem; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
-.export-day-card h2 { margin-top: 0; margin-bottom: 1rem; }
-.export-meal { border-top: 1px solid #ececec; padding-top: 0.9rem; margin-top: 0.9rem; }
-.export-meal:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
-.export-meal h3 { margin: 0 0 0.25rem; color: #2d6a4f; }
-.export-recipe-title { margin: 0; font-weight: 700; }
-.export-recipe-meta { margin: 0.25rem 0 0.6rem; color: #666; }
-.export-ingredients-list { margin: 0; padding-left: 1.1rem; }
+.export-body {
+	background: #f4f1e8;
+}
+
+.export-shell {
+	padding: 2rem 0 3rem;
+}
+
+.export-toolbar {
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1.25rem;
+}
+
+.export-toolbar h1 {
+	margin: 0 0 0.35rem;
+}
+
+.export-summary {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	background: white;
+	border-radius: 22px;
+	padding: 1.25rem;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+	margin-bottom: 1.25rem;
+}
+
+.export-eyebrow {
+	margin: 0 0 0.35rem;
+	color: #5f6b62;
+	font-size: 0.8rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.export-summary h2, .export-summary p {
+	margin: 0;
+}
+
+.export-ingredients {
+	margin-bottom: 1.25rem;
+}
+
+.shopping-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.75rem 1rem;
+}
+
+.shopping-list li {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-bottom: 0.55rem;
+	border-bottom: 1px solid #ececec;
+}
+
+.shopping-list span {
+	color: #666;
+}
+
+.export-days-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.export-day-card {
+	background: white;
+	border-radius: 22px;
+	padding: 1.25rem;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.export-day-card h2 {
+	margin-top: 0;
+	margin-bottom: 1rem;
+}
+
+.export-meal {
+	border-top: 1px solid #ececec;
+	padding-top: 0.9rem;
+	margin-top: 0.9rem;
+}
+
+.export-meal:first-of-type {
+	border-top: none;
+	padding-top: 0;
+	margin-top: 0;
+}
+
+.export-meal h3 {
+	margin: 0 0 0.25rem;
+	color: #2d6a4f;
+}
+
+.export-recipe-title {
+	margin: 0;
+	font-weight: 700;
+}
+
+.export-recipe-meta {
+	margin: 0.25rem 0 0.6rem;
+	color: #666;
+}
+
+.export-ingredients-list {
+	margin: 0;
+	padding-left: 1.1rem;
+}
+
+@media (max-width: 780px) {
+	.export-toolbar, .export-summary {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	
+	.shopping-list, .export-days-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media print {
+	body {
+		background: white;
+	}
+	
+	.no-print {
+		display: none !important;
+	}
+	
+	.export-shell {
+		padding: 0;
+	}
+	
+	.export-summary, .export-ingredients, .export-day-card {
+		box-shadow: none;
+		border: 1px solid #dcdcdc;
+	}
+	
+	.export-days-grid {
+		gap: 0.75rem;
+	}
+}
 
 @media (max-width: 780px) {
   .export-toolbar, .export-summary { flex-direction: column; align-items: flex-start; }

@@ -1,29 +1,40 @@
-.fridge-layout { 
-    display: grid; grid-template-columns: 360px 1fr; gap: 1.25rem; 
+.fridge-layout {
+	display: grid;
+	grid-template-columns: 360px 1fr;
+	gap: 1.25rem;
 }
-.fridge-item { 
-    display: flex; justify-content: space-between; align-items: center; padding: 0.95rem 0; border-bottom: 1px solid #ececec; 
+
+.fridge-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.95rem 0;
+	border-bottom: 1px solid #ececec;
 }
-.fridge-item span { 
-    display: block; color: #666; margin-top: 0.25rem; 
+
+.fridge-item span {
+	display: block;
+	color: #666;
+	margin-top: 0.25rem;
 }
+
 .form-stack {
-    display: grid;
-    gap: 0.95rem;
+	display: grid;
+	gap: 0.95rem;
 }
 
 .form-stack label {
-    display: grid;
-    gap: 0.4rem;
-    font-weight: 700;
+	display: grid;
+	gap: 0.4rem;
+	font-weight: 700;
 }
 
 .form-stack button {
-    margin-top: 0.25rem;
+	margin-top: 0.25rem;
 }
 
-.danger-button { 
-    background: #8d0801; 
+.danger-button {
+	background: #8d0801;
 }
 
 
