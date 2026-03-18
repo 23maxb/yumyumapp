@@ -3,6 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/lib.php';
 require_login();
 
+// Build export payload once, then render it into print-friendly HTML chunks.
 $user = current_user();
 $export = meal_plan_export_for_user((int)$user['id']);
 
@@ -14,6 +15,7 @@ foreach ($export['days'] as $day) {
         $recipe = $day['meals'][$mealType] ?? null;
 
         if (!$recipe) {
+            // Keep empty slots visible so the weekly structure stays intact in exports.
             $mealsMarkup .= '<div class="export-meal"><h3>' . h(ucfirst($mealType)) . '</h3><p class="empty-state">No recipe planned.</p></div>';
             continue;
         }

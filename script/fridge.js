@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const message = document.querySelector('#fridge-message');
 
   async function loadItems() {
+    // Keep list rendering centralized so every mutation can refresh through one path.
     const response = await fetch('/script/api-fridge.php');
     const data = await response.json();
     const items = data.items || [];
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();
+    // Serialize all form fields as a flat JSON payload.
     const payload = Object.fromEntries(new FormData(form).entries());
     const response = await fetch('/script/api-fridge.php', {
       method: 'POST',
@@ -30,11 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
     message.textContent = data.success ? 'Ingredient added.' : (data.message || 'Failed to add item.');
     if (data.success) {
       form.reset();
+      // Reload from server so UI always reflects canonical data.
       loadItems();
     }
   });
 
   list?.addEventListener('click', async (event) => {
+    // Event delegation keeps one listener for all dynamic remove buttons.
     const button = event.target.closest('button[data-id]');
     if (!button) return;
     await fetch('/script/api-fridge.php', {
@@ -45,5 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadItems();
   });
 
+  // Initial load when page opens.
   loadItems();
 });

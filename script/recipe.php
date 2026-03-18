@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
 require_login();
+
+// Recipe id comes from query string and is validated as an integer.
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $recipe = $id > 0 ? recipe_find($id) : null;
 if (!$recipe) {
+    // Redirect back to the browser page with a flash message if id is invalid.
     set_flash('Recipe not found.', 'error');
     header('Location: /script/index.php?page=recipes');
     exit;
@@ -15,6 +18,7 @@ $fridgeNames = array_map(static fn(array $item): string => strtolower(trim((stri
 $matchedIngredients = '';
 $missingIngredients = '';
 
+// Partition ingredients into "have" vs "need" based on the fridge list.
 foreach ($recipe['ingredients'] as $ingredient) {
     $ingredientName = trim((string)$ingredient);
     $itemMarkup = '<li>' . h($ingredientName) . '</li>';
@@ -35,10 +39,8 @@ $missingIngredients = $missingIngredients !== ''
     : '<li class="empty-state">You already have everything for this recipe.</li>';
 
 $steps = '';
-foreach (preg_split('/
-|
-|
-/', trim((string)$recipe['instructions'])) as $step) {
+// Convert multi-line instructions into list items for template rendering.
+foreach (preg_split('/\r\n|\r|\n/', trim((string)$recipe['instructions'])) as $step) {
     if (trim($step) !== '') {
         $steps .= '<li>' . h(trim($step)) . '</li>';
     }

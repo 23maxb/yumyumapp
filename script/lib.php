@@ -1,5 +1,5 @@
 <?php
-// Shared utility file - Contains database connections and helper functions used across multiple scripts.
+// Shared utility library: database access, auth/session helpers, and app-level data utilities.
 declare(strict_types=1);
 session_start();
 
@@ -16,14 +16,17 @@ function db(): PDO {
         return $pdo;
     }
 
+    // Lazily initialize a single PDO instance for this request lifecycle.
     $needsSetup = !file_exists(DB_PATH);
     $pdo = new PDO('sqlite:' . DB_PATH);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
     if ($needsSetup) {
+        // First run: create schema and seed starter data.
         setup_database($pdo);
     } else {
+        // Existing DB: apply lightweight migrations and ensure defaults exist.
         ensure_recipe_schema($pdo);
         ensure_meal_plan_schema($pdo);
         ensure_sample_recipes($pdo);
@@ -33,6 +36,7 @@ function db(): PDO {
 }
 
 function setup_database(PDO $pdo): void {
+    // Initialize the full schema from SQL, then run safety migrations.
     $schema = file_get_contents(DATA_PATH . '/schema.sql');
     $pdo->exec($schema ?: '');
     ensure_recipe_schema($pdo);
@@ -40,6 +44,7 @@ function setup_database(PDO $pdo): void {
 
     $check = (int)$pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
     if ($check === 0) {
+        // Seed one demo account plus basic fridge items for first-time use.
         $passwordHash = password_hash('password123', PASSWORD_DEFAULT);
         $stmt = $pdo->prepare('INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)');
         $stmt->execute(['Demo User', 'demo@fiveguys.local', $passwordHash]);
@@ -59,6 +64,7 @@ function ensure_recipe_schema(PDO $pdo): void {
     $columnNames = array_map(static fn(array $column): string => (string)$column['name'], $columns);
 
     if (!in_array('created_by_user_id', $columnNames, true)) {
+        // Backfill newer ownership column for older databases.
         $pdo->exec('ALTER TABLE recipes ADD COLUMN created_by_user_id INTEGER');
     }
 }
@@ -71,6 +77,7 @@ function ensure_meal_plan_schema(PDO $pdo): void {
         return;
     }
 
+    // Migration path for legacy meal_plan table that lacked meal_type.
     $pdo->beginTransaction();
     try {
         $pdo->exec('ALTER TABLE meal_plan RENAME TO meal_plan_legacy');
@@ -208,6 +215,7 @@ function ensure_sample_recipes(PDO $pdo): void {
     $existingMap = array_fill_keys(array_map('strtolower', array_map('strval', $existingTitles)), true);
 
     foreach (sample_recipes() as $recipe) {
+        // Use title as a stable, human-readable dedupe key.
         if (isset($existingMap[strtolower($recipe['title'])])) {
             continue;
         }
@@ -224,6 +232,8 @@ function current_user(): ?array {
     if (empty($_SESSION['user_id'])) {
         return null;
     }
+
+    // Re-query user details each request so session only stores the user id.
     $stmt = db()->prepare('SELECT id, name, email FROM users WHERE id = ?');
     $stmt->execute([(int)$_SESSION['user_id']]);
     $user = $stmt->fetch();
@@ -232,6 +242,7 @@ function current_user(): ?array {
 
 function require_login(): void {
     if (!current_user()) {
+        // Centralized redirect keeps protected pages consistent.
         header('Location: /script/index.php?page=login');
         exit;
     }
@@ -263,8 +274,10 @@ function render_template(string $template, array $data = []): void {
     ];
     $data = array_merge($defaults, $data);
     foreach ($data as $key => $value) {
+        // Simple token replacement using {{token_name}} placeholders.
         $html = str_replace('{{' . $key . '}}', (string)$value, $html);
     }
+    // Remove any unresolved tokens so raw placeholders never leak to UI.
     $html = preg_replace('/\{\{[a-zA-Z0-9_\-]+\}\}/', '', $html);
     echo $html;
 }
@@ -287,6 +300,7 @@ function flash_message_html(): string {
 }
 
 function recipes_all(): array {
+    // Hydrate JSON-encoded recipe columns into PHP arrays.
     $rows = db()->query('SELECT * FROM recipes ORDER BY title')->fetchAll();
     foreach ($rows as &$row) {
         $row = hydrate_recipe_row($row);
@@ -295,6 +309,7 @@ function recipes_all(): array {
 }
 
 function recipes_all_with_matches(int $userId): array {
+    // Compute per-recipe ingredient overlap against the user's fridge.
     $items = fridge_items_for_user($userId);
     $names = array_map(fn($row) => strtolower(trim((string)$row['item_name'])), $items);
 
@@ -320,12 +335,14 @@ function recipe_find(int $id): ?array {
 }
 
 function hydrate_recipe_row(array $row): array {
+    // Normalize raw DB rows into render-ready recipe objects.
     $row['ingredients'] = json_decode((string)$row['ingredients_json'], true) ?: [];
     $row['image_url'] = trim((string)($row['image_url'] ?? '')) !== '' ? (string)$row['image_url'] : default_recipe_image();
     return $row;
 }
 
 function create_recipe(array $input, int $userId): array {
+    // Normalize and validate before persistence.
     $title = trim((string)($input['title'] ?? ''));
     $summary = trim((string)($input['summary'] ?? ''));
     $imageUrl = trim((string)($input['image_url'] ?? ''));
@@ -362,6 +379,7 @@ function create_recipe(array $input, int $userId): array {
 
     $recipe = recipe_find($id);
     if (!$recipe) {
+        // Defensive guard to avoid returning a partial success state.
         throw new RuntimeException('Recipe could not be loaded after creation.');
     }
 
@@ -375,6 +393,7 @@ function fridge_items_for_user(int $userId): array {
 }
 
 function matched_recipes_for_user(int $userId): array {
+    // Return only recipes with at least one ingredient overlap.
     $items = fridge_items_for_user($userId);
     $names = array_map(fn($row) => strtolower(trim((string)$row['item_name'])), $items);
     $matches = [];
@@ -395,6 +414,7 @@ function matched_recipes_for_user(int $userId): array {
 }
 
 function meal_plan_for_user(int $userId): array {
+    // Build a complete day x meal matrix so the UI can render predictable slots.
     $map = [];
     foreach (WEEK_DAYS as $day) {
         foreach (MEAL_TYPES as $mealType) {
@@ -422,6 +442,7 @@ function meal_plan_for_user(int $userId): array {
 }
 
 function meal_plan_export_for_user(int $userId): array {
+    // Export includes both the day plan and a shopping-list-style ingredient rollup.
     $plan = meal_plan_for_user($userId);
     $days = [];
     $ingredientIndex = [];

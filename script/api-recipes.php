@@ -6,6 +6,7 @@ require_login();
 
 header('Content-Type: application/json');
 
+// Keep response fields consistent between list and create endpoints.
 function recipe_api_payload(array $recipe): array {
     return [
         'id' => (int)$recipe['id'],
@@ -23,6 +24,7 @@ function recipe_api_payload(array $recipe): array {
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'POST') {
+    // Accept a JSON recipe draft from the create form.
     $payload = json_decode(file_get_contents('php://input') ?: '', true);
     if (!is_array($payload)) {
         http_response_code(400);
@@ -31,6 +33,7 @@ if ($method === 'POST') {
     }
 
     try {
+        // Validation and persistence live in lib.php.
         $recipe = create_recipe($payload, (int)current_user()['id']);
         echo json_encode([
             'success' => true,
@@ -47,6 +50,7 @@ if ($method === 'POST') {
     exit;
 }
 
+// "all" returns every recipe with match counts, otherwise return matched-only.
 $mode = $_GET['mode'] ?? 'matched';
 
 if ($mode === 'all') {
@@ -57,6 +61,7 @@ if ($mode === 'all') {
 
 $data = array_map('recipe_api_payload', $recipes);
 
+// Always return the same envelope shape for client simplicity.
 echo json_encode([
     'success' => true,
     'recipes' => $data

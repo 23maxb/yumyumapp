@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_login();
 
+// Pull dashboard metrics from fridge state and ingredient matching.
 $user = current_user();
 $items = fridge_items_for_user((int)$user['id']);
 $matches = matched_recipes_for_user((int)$user['id']);
@@ -16,8 +17,10 @@ $cards .= '<div class="stat-card"><span>Top Match</span><strong>' . h($top) . '<
 $matchedRecipeCards = '';
 
 if (empty($matches)) {
+  // Friendly empty state when no recipes share ingredients with the fridge.
     $matchedRecipeCards = '<p class="empty-state">No recipe matches yet. Add more ingredients to your fridge.</p>';
 } else {
+  // Pre-render cards server-side so the home dashboard is instantly usable.
     foreach ($matches as $recipe) {
         $matchedRecipeCards .= '
             <article class="recipe-card">

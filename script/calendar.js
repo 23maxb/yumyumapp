@@ -2,8 +2,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const wrap = document.querySelector('#calendar-grid');
   const status = document.querySelector('#calendar-status');
   if (!wrap) return;
+
+  // Canonical day and meal ordering for rendering and payloads.
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const mealTypes = ['breakfast', 'lunch', 'dinner'];
+
+  // Bootstrap both the saved plan and selectable recipe options.
   const response = await fetch('/script/api-calendar.php');
   const data = await response.json();
   const recipes = data.recipes || [];
@@ -16,11 +20,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function options(selectedId) {
+    // Build dropdown options once per slot with selected state preserved.
     return ['<option value="">No recipe selected</option>']
       .concat(recipes.map((recipe) => `<option value="${recipe.id}" ${Number(recipe.id) === Number(selectedId || 0) ? 'selected' : ''}>${recipe.title}</option>`))
       .join('');
   }
 
+  // Render one card per day and one select per meal type.
   wrap.innerHTML = days.map((day) => `
     <article class="day-card">
       <h3>${day}</h3>
@@ -38,6 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!select) return;
     setStatus('Saving plan...');
     try {
+      // Save only the changed slot; server upserts by day + meal type.
       const response = await fetch('/script/api-calendar.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -1,13 +1,17 @@
 <?php
-// Creates new account
+// Create a new user account and immediately log the user in.
 declare(strict_types=1);
 require_once __DIR__ . '/lib.php';
 header('Content-Type: application/json');
+
+// This endpoint only accepts JSON POST requests.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed']);
     exit;
 }
+
+// Normalize user input before validating required fields.
 $input = json_decode(file_get_contents('php://input'), true) ?: [];
 $name = trim((string)($input['name'] ?? ''));
 $email = trim((string)($input['email'] ?? ''));
@@ -17,12 +21,15 @@ if ($name === '' || $email === '' || $password === '') {
     echo json_encode(['success' => false, 'message' => 'All fields are required']);
     exit;
 }
+
+// Insert user, hash password securely, and store session user id.
 try {
     $stmt = db()->prepare('INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)');
     $stmt->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT)]);
     $_SESSION['user_id'] = (int)db()->lastInsertId();
     echo json_encode(['success' => true, 'redirect' => '/script/index.php?page=home']);
 } catch (Throwable $e) {
+    // SQLite uniqueness errors for email are surfaced as a user-friendly message.
     http_response_code(422);
     echo json_encode(['success' => false, 'message' => 'Email already exists']);
 }

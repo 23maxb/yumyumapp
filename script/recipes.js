@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const message = document.querySelector('#recipe-form-message');
   if (!grid) return;
 
+  // Keep a local cache so filtering and re-rendering are instant.
   let recipes = [];
 
   const setMessage = (text = '', type = '') => {
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const render = (term = '') => {
     const q = term.trim().toLowerCase();
 
+    // Search by title, summary, or category.
     const filtered = recipes.filter((recipe) => {
       return (
         recipe.title.toLowerCase().includes(q) ||
@@ -43,12 +45,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       `).join('') || '<p class="empty-state">No recipes matched your search.</p>';
   };
 
+  // Load all recipes once on page load.
   const response = await fetch('/script/api-recipes.php?mode=all');
   const data = await response.json();
 
   recipes = data.recipes || [];
   render();
 
+  // Live search by rerendering from local state.
   search?.addEventListener('input', () => render(search.value));
 
   form?.addEventListener('submit', async (event) => {
@@ -64,6 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setMessage('Saving recipe...');
 
     try {
+      // Server performs validation and returns the created recipe payload.
       const response = await fetch('/script/api-recipes.php', {
         method: 'POST',
         headers: {
@@ -77,6 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         throw new Error(data.message || 'Recipe could not be saved.');
       }
 
+      // Prepend new recipe so users see immediate confirmation.
       recipes = [data.recipe, ...recipes];
       form.reset();
       setMessage('Recipe added successfully.', 'success');
